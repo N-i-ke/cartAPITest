@@ -133,6 +133,32 @@
   </div>
 </div>
 
+    {% comment %} テストコード {% endcomment %}
+
+    {% comment %} pageのタイトルにショップのタイトルが含まれていない時発火 {% endcomment %}
+    {% unless page_title contains shop.name %}
+      {{shop.name}}
+    {% endunless %}
+
+    {% comment %} //page.descriptionが空じゃなければ説明文を出力する {% endcomment %}
+    {% if page.description == blank %}
+      <p>{{ page.description }}</p>
+    {% endif %}
+
+    <p>
+      ストアの名称：{{shop.name}}
+    </p>
+    {% assign shop = '上書きテスト' %}
+    <p>
+      {{shop.name}}
+    </p>
+
+    {% if product.title == 'Example T-Shirt' %}
+      <p>Enjoy shopify development!</p>
+    {% endif %}
+    
+    {% comment %} unless 判定結果がfalseである時にコードを実行する {% endcomment %}
+
 {% schema %}
 {
   "name": "t:sections.contact-form.name",

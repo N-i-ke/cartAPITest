@@ -87,6 +87,7 @@
               >
                 {{- block.settings.text -}}
               </p>
+            {% comment %} タイトル {% endcomment %}
             {%- when 'title' -%}
               <div class="product__title" {{ block.shopify_attributes }}>
                 <h1>{{ product.title | escape }}</h1>
@@ -96,7 +97,29 @@
                   </h2>
                 </a>
               </div>
+              {% comment %} 価格 {% endcomment %}
             {%- when 'price' -%}
+              {% if product.available %}
+                <p>この商品は購入できません</p>
+              {% endif %}
+
+              {% for item in product.products %}
+                {{product.title}}
+                {% else %}
+                  <p>条件に一致する商品がありません</p>
+              {% endfor %}
+              {% assign value = "価値" %}
+              {% comment %} 変数valueを作成する {% endcomment %}
+              {% capture  value_text %}
+                <p>私は{{value}}が好きです</p>
+              {% endcapture %}
+
+              {{value_text}}
+
+              {% assign value = "無価値" %}
+              {{value}}
+              {% assign value = "最高価値" %}
+              {{value}}
               <div class="no-js-hidden" id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
                 {%- render 'price',
                   product: product,
