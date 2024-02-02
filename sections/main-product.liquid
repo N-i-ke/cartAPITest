@@ -236,6 +236,41 @@
                     <span>({{- 'products.product.quantity.in_cart_html' | t: quantity: cart_qty -}})</span>
                   </span>
                 </label>
+                <div id="cartAPI" class="cart-api-test" style="background-color: red; border-radius: 10px; color: blue; text-align: center; font-weight: bold; margin: 20px;">
+                  ここを押してCartAPIを叩いてみる
+                </div>
+                
+                <!-- カート内のアイテム数を表示する要素 -->
+                <div id="itemCountDisplay"></div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                    var cartAPIElement = document.getElementById('cartAPI');
+                    var itemCountDisplay = document.getElementById('itemCountDisplay');
+
+
+                    cartAPIElement.addEventListener('click', function () {
+                      console.log('cartAPI');
+                      fetch('/cart.js')
+                      .then(response => response.json())
+                      .then(data => {
+                            console.log(data);
+                            console.log(data['items']);
+                            console.log(data.item_count);
+
+                            if (data.item_count) {
+                                itemCountDisplay.innerText = `現在のカートのアイテム数: ${data.item_count}`;
+                            } else {
+                                itemCountDisplay.innerText = 'カートは空です。';
+                            }
+                      })
+                      .catch((error) => {
+                          console.error('Error:', error); 
+                      });
+                      
+                    });
+                  });
+                </script>
                 <div class="price-per-item__container">
                   <quantity-input class="quantity" data-url="{{ product.url }}" data-section="{{ section.id }}">
                     <button class="quantity__button no-js-hidden" name="minus" type="button">
@@ -413,12 +448,6 @@
               <a href="{{ block.settings.page.url }}" class="product-popup-modal__button link no-js">
                 {{- block.settings.text -}}
               </a>
-            {%- when 'share' -%}
-              {% assign share_url = product.selected_variant.url | default: product.url | prepend: request.origin %}
-              {% render 'share-button',
-                block: block,
-                share_link: share_url
-              %}
 
             {%- when 'variant_picker' -%}
               {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
