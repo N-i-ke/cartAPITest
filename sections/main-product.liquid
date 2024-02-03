@@ -236,21 +236,19 @@
                     <span>({{- 'products.product.quantity.in_cart_html' | t: quantity: cart_qty -}})</span>
                   </span>
                 </label>
-                <div id="cartAPI" class="cart-api-test" style="background-color: red; border-radius: 10px; color: blue; text-align: center; font-weight: bold; margin: 20px;">
-                  ここを押してCartAPIを叩いてみる
+                <div id="cartAPI" class="cart-api-test" style="background-color: black; border-radius: 10px; color: white; text-align: center; font-weight: bold; margin: 20px;">
+                  現在のカートのアイテム数と料金を確認する
                 </div>
-                
                 <!-- カート内のアイテム数を表示する要素 -->
                 <div id="itemCountDisplay"></div>
 
                 <script>
-                    document.addEventListener('DOMContentLoaded', function () {
+                  document.addEventListener('DOMContentLoaded', function () {
                     var cartAPIElement = document.getElementById('cartAPI');
                     var itemCountDisplay = document.getElementById('itemCountDisplay');
 
-
-                    cartAPIElement.addEventListener('click', function () {
-                      console.log('cartAPI');
+                    function fetchDataAndDisplayCart() {
+                      console.log('cartAPI start');
                       fetch('/cart.js')
                       .then(response => response.json())
                       .then(data => {
@@ -259,7 +257,7 @@
                             console.log(data.item_count);
 
                             if (data.item_count) {
-                                itemCountDisplay.innerText = `現在のカートのアイテム数: ${data.item_count}`;
+                                itemCountDisplay.innerText = `現在のカートのアイテム数: ${data.item_count}\n合計金額: ${data.total_price / 100}${data.currency}\n`;
                             } else {
                                 itemCountDisplay.innerText = 'カートは空です。';
                             }
@@ -267,9 +265,11 @@
                       .catch((error) => {
                           console.error('Error:', error); 
                       });
-                      
-                    });
+                    }
+
+                    cartAPIElement.addEventListener('click', fetchDataAndDisplayCart);
                   });
+                    
                 </script>
                 <div class="price-per-item__container">
                   <quantity-input class="quantity" data-url="{{ product.url }}" data-section="{{ section.id }}">
