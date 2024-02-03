@@ -262,6 +262,13 @@
                     var itemProductCount = document.getElementById('Quantity-template--20976800727337__main');
                     var productVariantId = itemVariantId.innerHTML;
 
+                    function cartCalu(){
+                      var cartCount = document.querySelector('.cart-count-bubble span');
+                      var currentCount = parseInt(cartCount.innerText, 10);
+                      var newCount = currentCount + parseInt(itemProductCount.value, 10);
+                      cartCount.innerHTML = newCount;
+                    }
+
                     function fetchAddCart() {
                       console.log('cartAdd start');
                       let formData = {
@@ -279,6 +286,7 @@
                       })
                       .then(response => {
                         console.log('Response:', response)
+                        cartCalu()
                         return response.json();
                       })
                       .catch((error) => {
