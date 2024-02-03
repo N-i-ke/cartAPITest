@@ -241,7 +241,7 @@
                 </div>
                 
                 <div id="cartAddAPI" class="cart-api-test" style="background-color: black; border-radius: 10px; color: white; text-align: center; font-weight: bold; margin: 20px;">
-                  AddApiを使う
+                  カートに追加する
                 </div>
                 {% comment %} variantIDを表示する {% endcomment %}
                 <div class="productVariant">
@@ -259,16 +259,15 @@
                     var cartAddAPIElement = document.getElementById('cartAddAPI');
                     var itemCountDisplay = document.getElementById('itemCountDisplay');
                     var itemVariantId = document.getElementById('variantID');
-
-                    console.log(itemVariantId.innerHTML)
-                    var productVariantId = itemVariantId.innerHTML
-                    console.log(productVariantId)
+                    var itemProductCount = document.getElementById('Quantity-template--20976800727337__main');
+                    var productVariantId = itemVariantId.innerHTML;
 
                     function fetchAddCart() {
                       console.log('cartAdd start');
                       let formData = {
                          'items': [{
                           'id': productVariantId,
+                          'quantity': itemProductCount.value
                         }]
                       };
                       fetch(window.Shopify.routes.root + 'cart/add.js', {
@@ -279,6 +278,7 @@
                       body: JSON.stringify(formData)
                       })
                       .then(response => {
+                        console.log('Response:', response)
                         return response.json();
                       })
                       .catch((error) => {
