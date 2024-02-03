@@ -239,14 +239,55 @@
                 <div id="cartAPI" class="cart-api-test" style="background-color: black; border-radius: 10px; color: white; text-align: center; font-weight: bold; margin: 20px;">
                   現在のカートのアイテム数と料金を確認する
                 </div>
+                
+                <div id="cartAddAPI" class="cart-api-test" style="background-color: black; border-radius: 10px; color: white; text-align: center; font-weight: bold; margin: 20px;">
+                  AddApiを使う
+                </div>
+                {% comment %} variantIDを表示する {% endcomment %}
+                <div class="productVariant">
+                  {% for variant in product.variants %}
+                    <p>variant-id:</p>
+                    <p id="variantID" class="variantID">{{ variant.id }}</p>
+                  {% endfor %}
+                </div>
                 <!-- カート内のアイテム数を表示する要素 -->
                 <div id="itemCountDisplay"></div>
 
                 <script>
                   document.addEventListener('DOMContentLoaded', function () {
                     var cartAPIElement = document.getElementById('cartAPI');
+                    var cartAddAPIElement = document.getElementById('cartAddAPI');
                     var itemCountDisplay = document.getElementById('itemCountDisplay');
+                    var itemVariantId = document.getElementById('variantID');
 
+                    console.log(itemVariantId.innerHTML)
+                    var productVariantId = itemVariantId.innerHTML
+                    console.log(productVariantId)
+
+                    function fetchAddCart() {
+                      console.log('cartAdd start');
+                      let formData = {
+                         'items': [{
+                          'id': productVariantId,
+                        }]
+                      };
+                      fetch(window.Shopify.routes.root + 'cart/add.js', {
+                      method: 'POST',
+                      headers: {
+                      'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify(formData)
+                      })
+                      .then(response => {
+                        return response.json();
+                      })
+                      .catch((error) => {
+                          console.error('Error:', error);
+                      });  
+                    }
+                    cartAddAPIElement.addEventListener('click', fetchAddCart);
+
+                    
                     function fetchDataAndDisplayCart() {
                       console.log('cartAPI start');
                       fetch('/cart.js')
