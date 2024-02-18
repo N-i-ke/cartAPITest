@@ -243,6 +243,10 @@
                 <div id="cartAddAPI" class="cart-api-test" style="background-color: black; border-radius: 10px; color: white; text-align: center; font-weight: bold; margin: 20px;">
                   カートに追加する
                 </div>
+                
+                <div id="cartUpdateAPI" class="cart-api-test" style="background-color: black; border-radius: 10px; color: white; text-align: center; font-weight: bold; margin: 20px;">
+                  カートの数量を更新する
+                </div>
                 {% comment %} variantIDを表示する {% endcomment %}
                 <div class="productVariant">
                   {% for variant in product.variants %}
@@ -257,10 +261,14 @@
                   document.addEventListener('DOMContentLoaded', function () {
                     var cartAPIElement = document.getElementById('cartAPI');
                     var cartAddAPIElement = document.getElementById('cartAddAPI');
+                    var cartUpdateAPIElement = document.getElementById('cartUpdateAPI');
                     var itemCountDisplay = document.getElementById('itemCountDisplay');
                     var itemVariantId = document.getElementById('variantID');
                     var itemProductCount = document.getElementById('Quantity-template--20976800727337__main');
-                    var productVariantId = itemVariantId.innerHTML;
+                    var productVariantId = itemVariantId.innerText;
+                    var newProductVariantId = parseInt(productVariantId);
+                    var newItemProductCount = parseInt(itemProductCount.value, 10);
+
 
                     function cartCalu(){
                       var cartCount = document.querySelector('.cart-count-bubble span');
@@ -317,6 +325,31 @@
                     }
 
                     cartAPIElement.addEventListener('click', fetchDataAndDisplayCart);
+
+                    function fetchUpdateCart(){
+
+                      var vairantId = newProductVariantId;
+                      
+                      let updates = {
+                        [vairantId]: itemProductCount.value
+                      };
+                      console.log(updates)
+                      fetch(window.Shopify.routes.root + 'cart/update.js', {
+                       method: 'POST',
+                       headers: {
+                        'Content-Type': 'application/json'
+                        },
+                          body: JSON.stringify({ updates })
+                        })
+                      .then(response => {
+                        console.log('Update Response:', response)
+                        return response.json();
+                      })
+                      .catch((error) => {
+                      console.error('Error:', error);
+                      });
+                    }
+                    cartUpdateAPIElement.addEventListener('click', fetchUpdateCart);
                   });
                     
                 </script>
